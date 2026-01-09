@@ -123,10 +123,77 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* NOCHILL Frameworks */}
+        <div className="mt-20">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
+            Powered by NOCHILL Frameworks
+          </h2>
+          <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+            Battle-tested systems for African content creators
+          </p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border-2 border-orange-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                🧠 R×A×C×U^B Hook Formula
+              </h3>
+              <p className="text-sm text-gray-600">
+                Scientific hook scoring system. Target viral score: 300+. Every hook evaluated for Relevance, Awareness, Clarity, Uniqueness, and Broadened appeal.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border-2 border-orange-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                💰 PAIDS Monetization
+              </h3>
+              <p className="text-sm text-gray-600">
+                Every script aligns with revenue strategy: Products (40%), Ads (20%), Information (25%), Deals (10%), Services (5%).
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border-2 border-orange-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                📖 SEEDS Story Structure
+              </h3>
+              <p className="text-sm text-gray-600">
+                Setup → Escalation → Emotion → Discovery → Summary. Proven flow that keeps viewers watching to the end.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border-2 border-orange-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                🌍 African Creator Context
+              </h3>
+              <p className="text-sm text-gray-600">
+                Optimized for low CPMs (R18-R120 vs $145-R270), load shedding, data costs, and payment friction unique to African creators.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border-2 border-orange-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                😰 Shadow Fears Integration
+              </h3>
+              <p className="text-sm text-gray-600">
+                Taps into deep pain points: Family shame, time anxiety, imposter syndrome, generational poverty, and permanent failure.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border-2 border-orange-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                🤝 Ubuntu Philosophy
+              </h3>
+              <p className="text-sm text-gray-600">
+                "I am because we are." Scripts built for collective success and generational wealth. For children's children.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="mt-20 text-center text-gray-600">
-          <p className="mb-2">Built with NOCHILL frameworks</p>
-          <p className="text-sm">PAIDS • SEEDS • 4E • DARES • Genesis</p>
+          <p className="mb-2 text-lg font-semibold">You understand? Because you understand.</p>
+          <p className="text-xl font-bold text-orange-600 mb-4">🌍 For children's children.</p>
+          <p className="text-sm">NOCHILL PTY LTD • PAIDS • SEEDS • 4E • R×A×C×U^B • Ubuntu</p>
         </div>
       </div>
     </div>

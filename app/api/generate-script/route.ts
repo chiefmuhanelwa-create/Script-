@@ -59,53 +59,121 @@ export async function POST(request: NextRequest) {
 function parseScriptResponse(response: string) {
   const scripts = []
 
-  // Extract Instagram Reel Script
-  const reelMatch = response.match(/INSTAGRAM REEL[\s\S]*?(?=TIKTOK|$)/i)
-  if (reelMatch) {
-    scripts.push({
-      platform: 'Instagram Reel',
-      duration: '60 seconds',
-      content: reelMatch[0].trim()
-    })
+  // Try to split by VERSION markers first (new format)
+  const versionSplit = response.split(/###\s*VERSION\s+[A-E]:/i)
+
+  if (versionSplit.length > 1) {
+    // New format with VERSION A, B, C, D, E markers
+
+    // VERSION A: Instagram Reel (60s)
+    const reelMatch = response.match(/###\s*VERSION\s+A:[\s\S]*?(?=###\s*VERSION\s+B:|$)/i)
+    if (reelMatch) {
+      scripts.push({
+        platform: 'Instagram Reel',
+        duration: '60 seconds',
+        content: reelMatch[0].trim()
+      })
+    }
+
+    // VERSION B: TikTok (15s)
+    const tiktokMatch = response.match(/###\s*VERSION\s+B:[\s\S]*?(?=###\s*VERSION\s+C:|$)/i)
+    if (tiktokMatch) {
+      scripts.push({
+        platform: 'TikTok',
+        duration: '15 seconds',
+        content: tiktokMatch[0].trim()
+      })
+    }
+
+    // VERSION C: YouTube Short (3min)
+    const youtubeMatch = response.match(/###\s*VERSION\s+C:[\s\S]*?(?=###\s*VERSION\s+D:|$)/i)
+    if (youtubeMatch) {
+      scripts.push({
+        platform: 'YouTube Short',
+        duration: '3 minutes',
+        content: youtubeMatch[0].trim()
+      })
+    }
+
+    // VERSION D: Carousel
+    const carouselMatch = response.match(/###\s*VERSION\s+D:[\s\S]*?(?=###\s*VERSION\s+E:|$)/i)
+    if (carouselMatch) {
+      scripts.push({
+        platform: 'Instagram Carousel',
+        duration: '10 slides',
+        content: carouselMatch[0].trim()
+      })
+    }
+
+    // VERSION E: Twitter Thread
+    const threadMatch = response.match(/###\s*VERSION\s+E:[\s\S]*$/i)
+    if (threadMatch) {
+      scripts.push({
+        platform: 'Twitter Thread',
+        duration: '11 tweets',
+        content: threadMatch[0].trim()
+      })
+    }
+  } else {
+    // Fallback to old format parsing
+
+    // Extract Instagram Reel Script
+    const reelMatch = response.match(/INSTAGRAM REEL[\s\S]*?(?=TIKTOK|VERSION B|$)/i)
+    if (reelMatch) {
+      scripts.push({
+        platform: 'Instagram Reel',
+        duration: '60 seconds',
+        content: reelMatch[0].trim()
+      })
+    }
+
+    // Extract TikTok Script
+    const tiktokMatch = response.match(/(?:VERSION B:|TIKTOK)[\s\S]*?(?=YOUTUBE|VERSION C|$)/i)
+    if (tiktokMatch) {
+      scripts.push({
+        platform: 'TikTok',
+        duration: '15 seconds',
+        content: tiktokMatch[0].trim()
+      })
+    }
+
+    // Extract YouTube Script
+    const youtubeMatch = response.match(/(?:VERSION C:|YOUTUBE SHORT)[\s\S]*?(?=CAROUSEL|VERSION D|$)/i)
+    if (youtubeMatch) {
+      scripts.push({
+        platform: 'YouTube Short',
+        duration: '3 minutes',
+        content: youtubeMatch[0].trim()
+      })
+    }
+
+    // Extract Carousel Script
+    const carouselMatch = response.match(/(?:VERSION D:|CAROUSEL)[\s\S]*?(?=TWITTER|THREAD|VERSION E|$)/i)
+    if (carouselMatch) {
+      scripts.push({
+        platform: 'Instagram Carousel',
+        duration: '10 slides',
+        content: carouselMatch[0].trim()
+      })
+    }
+
+    // Extract Twitter Thread
+    const threadMatch = response.match(/(?:VERSION E:|TWITTER|THREAD)[\s\S]*$/i)
+    if (threadMatch) {
+      scripts.push({
+        platform: 'Twitter Thread',
+        duration: '11 tweets',
+        content: threadMatch[0].trim()
+      })
+    }
   }
 
-  // Extract TikTok Script
-  const tiktokMatch = response.match(/TIKTOK[\s\S]*?(?=YOUTUBE|$)/i)
-  if (tiktokMatch) {
+  // If no scripts were parsed, return the full response as a single script
+  if (scripts.length === 0) {
     scripts.push({
-      platform: 'TikTok',
-      duration: '15 seconds',
-      content: tiktokMatch[0].trim()
-    })
-  }
-
-  // Extract YouTube Script
-  const youtubeMatch = response.match(/YOUTUBE SHORT[\s\S]*?(?=BONUS|CAROUSEL|$)/i)
-  if (youtubeMatch) {
-    scripts.push({
-      platform: 'YouTube Short',
-      duration: '3 minutes',
-      content: youtubeMatch[0].trim()
-    })
-  }
-
-  // Extract Carousel Script
-  const carouselMatch = response.match(/CAROUSEL[\s\S]*?(?=TWITTER|THREAD|$)/i)
-  if (carouselMatch) {
-    scripts.push({
-      platform: 'Instagram Carousel',
-      duration: '10 slides',
-      content: carouselMatch[0].trim()
-    })
-  }
-
-  // Extract Twitter Thread
-  const threadMatch = response.match(/TWITTER|THREAD[\s\S]*$/i)
-  if (threadMatch) {
-    scripts.push({
-      platform: 'Twitter Thread',
-      duration: '11 tweets',
-      content: threadMatch[0].trim()
+      platform: 'Complete Script',
+      duration: 'All versions',
+      content: response
     })
   }
 
