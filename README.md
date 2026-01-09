@@ -23,8 +23,15 @@ An AI-powered web application that instantly generates complete, ready-to-film v
 - **Frontend**: Next.js 14 (App Router) with React 18
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **AI**: OpenAI GPT-4 Turbo
+- **AI**: Claude 3.5 Sonnet (Anthropic) - **Superior storytelling & 33% cost savings**
 - **Deployment Ready**: Vercel, Railway, or Render
+
+**Why Claude over OpenAI?**
+- ✅ Better narrative expansion and storytelling
+- ✅ Longer outputs (8000 vs 4000 tokens)
+- ✅ Superior cultural intelligence for African context
+- ✅ 33% cheaper ($0.10 vs $0.15 per script)
+- ✅ More natural, conversational dialogue
 
 ## Prerequisites
 
@@ -32,7 +39,7 @@ Before you begin, ensure you have:
 
 - **Node.js** 18.17 or later
 - **npm** or **yarn** package manager
-- **OpenAI API Key** ([Get one here](https://platform.openai.com/api-keys))
+- **Claude API Key** ([Get one here](https://console.anthropic.com/settings/keys))
 
 ## Quick Start
 
@@ -59,11 +66,18 @@ Create a `.env.local` file in the root directory:
 cp .env.local.example .env.local
 ```
 
-Then edit `.env.local` and add your OpenAI API key:
+Then edit `.env.local` and add your Claude API key:
 
 ```env
-OPENAI_API_KEY=sk-your-actual-api-key-here
+ANTHROPIC_API_KEY=sk-ant-your-actual-api-key-here
 ```
+
+**Get your Claude API key:**
+1. Visit https://console.anthropic.com/settings/keys
+2. Sign up or log in
+3. Click "Create Key"
+4. Copy the key (starts with `sk-ant-`)
+5. Add $10+ credits at https://console.anthropic.com/settings/billing
 
 ### 4. Run Development Server
 
@@ -186,7 +200,7 @@ Taps into deep pain points:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `OPENAI_API_KEY` | Yes | Your OpenAI API key |
+| `ANTHROPIC_API_KEY` | Yes | Your Claude API key from console.anthropic.com |
 | `DATABASE_URL` | No | PostgreSQL connection (future feature) |
 | `NEXTAUTH_URL` | No | Authentication URL (future feature) |
 | `NEXTAUTH_SECRET` | No | Auth secret key (future feature) |

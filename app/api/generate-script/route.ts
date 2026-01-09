@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import Anthropic from '@anthropic-ai/sdk'
 import { MASTER_PROMPT } from '@/lib/prompts'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
 export async function POST(request: NextRequest) {
@@ -17,27 +17,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Call OpenAI API with master prompt
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview', // or 'gpt-4' for best quality
+    // Call Claude API with master prompt
+    const message = await anthropic.messages.create({
+      model: 'claude-3-5-sonnet-20241022', // Latest Claude with best storytelling
+      max_tokens: 8000, // Claude can handle longer outputs
+      temperature: 0.8, // Balance between creativity and consistency
+      system: MASTER_PROMPT, // System prompt for context
       messages: [
-        {
-          role: 'system',
-          content: MASTER_PROMPT
-        },
         {
           role: 'user',
           content: topic
         }
       ],
-      temperature: 0.8, // Balance between creativity and consistency
-      max_tokens: 4000, // Adjust based on output length needs
     })
 
-    const responseText = completion.choices[0].message.content
+    // Extract text from Claude's response
+    const responseText = message.content[0].type === 'text'
+      ? message.content[0].text
+      : ''
 
     // Parse the response into structured scripts
-    const scripts = parseScriptResponse(responseText || '')
+    const scripts = parseScriptResponse(responseText)
 
     return NextResponse.json({
       success: true,
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error: any) {
-    console.error('OpenAI API Error:', error)
+    console.error('Claude API Error:', error)
     return NextResponse.json(
       { error: 'Failed to generate scripts', details: error.message },
       { status: 500 }
