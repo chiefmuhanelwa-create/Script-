@@ -8,6 +8,19 @@ const anthropic = new Anthropic({
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if API key is configured
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('❌ ANTHROPIC_API_KEY not found in environment variables')
+      return NextResponse.json(
+        {
+          error: 'API key not configured',
+          details: 'ANTHROPIC_API_KEY environment variable is missing. Did you restart the dev server after creating .env.local?',
+          fix: 'Create .env.local file with ANTHROPIC_API_KEY, then restart: npm run dev'
+        },
+        { status: 500 }
+      )
+    }
+
     const { topic } = await request.json()
 
     if (!topic || typeof topic !== 'string') {
@@ -16,6 +29,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    console.log('🚀 Generating scripts for topic:', topic)
+    console.log('🔑 API key present:', process.env.ANTHROPIC_API_KEY ? 'Yes' : 'No')
 
     // Call Claude API with master prompt
     const message = await anthropic.messages.create({
@@ -31,6 +47,8 @@ export async function POST(request: NextRequest) {
       ],
     })
 
+    console.log('✅ Received response from Claude API')
+
     // Extract text from Claude's response
     const responseText = message.content[0].type === 'text'
       ? message.content[0].text
@@ -38,6 +56,8 @@ export async function POST(request: NextRequest) {
 
     // Parse the response into structured scripts
     const scripts = parseScriptResponse(responseText)
+
+    console.log('✅ Parsed', scripts.length, 'scripts')
 
     return NextResponse.json({
       success: true,
@@ -47,10 +67,45 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error: any) {
-    console.error('Claude API Error:', error)
+    console.error('❌ Claude API Error:', error)
+
+    // Detailed error handling
+    let errorMessage = 'Failed to generate scripts'
+    let errorDetails = error.message
+    let errorFix = 'Check the error details below'
+    let statusCode = 500
+
+    if (error.status === 401) {
+      errorMessage = 'Invalid API Key'
+      errorDetails = 'Your Claude API key is invalid or has been revoked'
+      errorFix = 'Get a new API key from https://console.anthropic.com/settings/keys'
+      statusCode = 401
+    } else if (error.status === 403) {
+      errorMessage = 'Insufficient Credits'
+      errorDetails = 'Your Anthropic account has insufficient credits'
+      errorFix = 'Add credits at https://console.anthropic.com/settings/billing (minimum $10)'
+      statusCode = 403
+    } else if (error.status === 429) {
+      errorMessage = 'Rate Limit Exceeded'
+      errorDetails = 'Too many requests. Please wait a moment.'
+      errorFix = 'Wait 60 seconds and try again'
+      statusCode = 429
+    } else if (error.message?.includes('credit')) {
+      errorMessage = 'Credit Issue'
+      errorDetails = error.message
+      errorFix = 'Add credits at https://console.anthropic.com/settings/billing'
+      statusCode = 402
+    }
+
     return NextResponse.json(
-      { error: 'Failed to generate scripts', details: error.message },
-      { status: 500 }
+      {
+        error: errorMessage,
+        details: errorDetails,
+        fix: errorFix,
+        status: error.status || statusCode,
+        type: error.type || 'unknown'
+      },
+      { status: statusCode }
     )
   }
 }
