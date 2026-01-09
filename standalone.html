@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOCHILL Viral Script Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #fff5f0 0%, #f3f4f6 100%);
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #6b7280;
+    }
+
+    .input-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 3rem;
+      gap: 1rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 500px;
+      padding: 1rem 1.5rem;
+      font-size: 1.125rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #fb923c;
+      box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
+    }
+
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(251, 146, 60, 0.3);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error-box {
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      padding: 1.5rem;
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+      border-radius: 0.5rem;
+    }
+
+    .error-box h3 {
+      color: #991b1b;
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+
+    .error-box p {
+      color: #dc2626;
+      margin-bottom: 0.75rem;
+    }
+
+    .error-fix {
+      background: white;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      border: 1px solid #fecaca;
+      margin-bottom: 0.75rem;
+    }
+
+    .error-fix strong {
+      color: #991b1b;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .solutions-list {
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+
+    .solutions-list ul {
+      margin-left: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .solutions-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #fb923c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      margin-top: 1rem;
+      font-size: 1.125rem;
+      color: #6b7280;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .tab:hover {
+      border-color: #fb923c;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: white;
+      border-color: #f97316;
+    }
+
+    .script-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      line-height: 1.8;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .script-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .btn-secondary {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #374151;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      border-color: #fb923c;
+      color: #fb923c;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #9ca3af;
+      padding: 5rem 1rem;
+      font-size: 1.125rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .input-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      input[type="text"] {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>NOCHILL Viral Script Generator</h1>
+      <p class="subtitle">Drop a topic. Get 5 ready-to-film scripts. No questions asked.</p>
+    </header>
+
+    <div class="input-section">
+      <input
+        type="text"
+        id="topicInput"
+        placeholder="e.g., Why African creators earn less"
+        maxlength="200"
+      />
+      <button id="generateBtn" onclick="generateScripts()">
+        Generate Scripts
+      </button>
+    </div>
+
+    <div id="errorBox" class="error-box hidden"></div>
+
+    <div id="loadingState" class="loading hidden">
+      <div class="spinner"></div>
+      <p class="loading-text" id="loadingText">Generating your viral scripts...</p>
+    </div>
+
+    <div id="scriptsContainer" class="hidden">
+      <div class="tabs" id="tabs"></div>
+      <div class="script-actions">
+        <button class="btn-secondary" onclick="copyScript()">📋 Copy Script</button>
+        <button class="btn-secondary" onclick="downloadScript()">💾 Download Script</button>
+      </div>
+      <div class="script-content" id="scriptContent"></div>
+    </div>
+
+    <div id="emptyState" class="empty-state">
+      <p>Enter a topic above to generate your viral scripts ⬆️</p>
+    </div>
+  </div>
+
+  <script>
+    let currentScripts = [];
+    let currentScriptIndex = 0;
+    let currentTopic = '';
+
+    const loadingMessages = [
+      'Analyzing viral patterns...',
+      'Applying R×A×C×U^B Hook Formula...',
+      'Structuring SEEDS narrative flow...',
+      'Optimizing for African creator context...',
+      'Integrating shadow fears and Ubuntu philosophy...',
+      'Crafting 5 platform-optimized scripts...',
+      'Almost there...'
+    ];
+
+    function showLoading() {
+      document.getElementById('loadingState').classList.remove('hidden');
+      document.getElementById('scriptsContainer').classList.add('hidden');
+      document.getElementById('emptyState').classList.add('hidden');
+      document.getElementById('errorBox').classList.add('hidden');
+
+      let messageIndex = 0;
+      const loadingInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % loadingMessages.length;
+        document.getElementById('loadingText').textContent = loadingMessages[messageIndex];
+      }, 3000);
+
+      // Store interval ID to clear it later
+      window.currentLoadingInterval = loadingInterval;
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingState').classList.add('hidden');
+      if (window.currentLoadingInterval) {
+        clearInterval(window.currentLoadingInterval);
+      }
+    }
+
+    function showError(error) {
+      const errorBox = document.getElementById('errorBox');
+      errorBox.innerHTML = `
+        <h3>❌ ${error.error || 'Error'}</h3>
+        ${error.details ? `<p>${error.details}</p>` : ''}
+        ${error.fix ? `
+          <div class="error-fix">
+            <strong>💡 How to Fix:</strong>
+            <p>${error.fix}</p>
+          </div>
+        ` : ''}
+        ${error.status ? `<p style="font-size: 0.875rem; color: #dc2626;">Error Code: ${error.status}</p>` : ''}
+        <div class="solutions-list">
+          <strong>📋 Common Solutions:</strong>
+          <ul>
+            <li>Check .env.local exists and has ANTHROPIC_API_KEY</li>
+            <li>Verify API key at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a></li>
+            <li>Check credits at <a href="https://console.anthropic.com/settings/billing" target="_blank">billing page</a></li>
+            <li>Restart server if you just added the API key</li>
+          </ul>
+        </div>
+      `;
+      errorBox.classList.remove('hidden');
+      hideLoading();
+    }
+
+    function displayScripts(scripts, topic) {
+      currentScripts = scripts;
+      currentTopic = topic;
+      currentScriptIndex = 0;
+
+      const tabsContainer = document.getElementById('tabs');
+      tabsContainer.innerHTML = '';
+
+      scripts.forEach((script, index) => {
+        const tab = document.createElement('div');
+        tab.className = 'tab' + (index === 0 ? ' active' : '');
+        tab.textContent = `${script.platform} (${script.duration})`;
+        tab.onclick = () => switchTab(index);
+        tabsContainer.appendChild(tab);
+      });
+
+      displayCurrentScript();
+
+      document.getElementById('scriptsContainer').classList.remove('hidden');
+      document.getElementById('emptyState').classList.add('hidden');
+      hideLoading();
+    }
+
+    function switchTab(index) {
+      currentScriptIndex = index;
+      document.querySelectorAll('.tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+      displayCurrentScript();
+    }
+
+    function displayCurrentScript() {
+      const script = currentScripts[currentScriptIndex];
+      document.getElementById('scriptContent').textContent = script.content;
+    }
+
+    function copyScript() {
+      const content = currentScripts[currentScriptIndex].content;
+      navigator.clipboard.writeText(content).then(() => {
+        alert('✅ Script copied to clipboard!');
+      }).catch(() => {
+        alert('❌ Failed to copy. Please select and copy manually.');
+      });
+    }
+
+    function downloadScript() {
+      const script = currentScripts[currentScriptIndex];
+      const filename = `${script.platform.replace(/\s+/g, '-')}_${currentTopic.substring(0, 30).replace(/\s+/g, '-')}.txt`;
+      const blob = new Blob([script.content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function generateScripts() {
+      const topic = document.getElementById('topicInput').value.trim();
+
+      if (!topic) {
+        alert('Please enter a topic');
+        return;
+      }
+
+      if (topic.length < 5) {
+        alert('Please enter a more descriptive topic (at least 5 characters)');
+        return;
+      }
+
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+
+      showLoading();
+
+      try {
+        const response = await fetch('/api/generate-script', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ topic }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError({
+            error: data.error || 'Failed to generate scripts',
+            details: data.details,
+            fix: data.fix,
+            status: data.status || response.status
+          });
+          return;
+        }
+
+        displayScripts(data.scripts, topic);
+
+      } catch (err) {
+        showError({
+          error: 'Network Error',
+          details: err.message || 'Could not connect to the server',
+          fix: 'Check if the server is running'
+        });
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate Scripts';
+      }
+    }
+
+    // Allow Enter key to generate
+    document.getElementById('topicInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        generateScripts();
+      }
+    });
+  </script>
+</body>
+</html>
